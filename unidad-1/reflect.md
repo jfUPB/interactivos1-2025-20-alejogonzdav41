@@ -2,6 +2,8 @@
 
 ## 🤔 Fase: Reflect
 
+## Actividad 7
+
 #### Parte 1: recuperación de conocimiento (Retrieval Practice)
 
 **-Basándote en los ejemplos que vimos de sistemas físicos interactivos al iniciar el curso, describe las tres características que definen a un sistema físico interactivo.**
@@ -37,3 +39,29 @@
 **-El tutorial de la Actividad 05 te llevó paso a paso. ¿Cómo te sentiste con ese método de aprendizaje? ¿Te dio seguridad o preferirías haberlo intentado por tu cuenta desde el principio?**
 * Me gusto porque asi sabia que cambios hacian que cosas y me daba la seguridad de que no daria pasos en falso.
 
+## Actividad 08
+
+#### Coevaluación
+
+**Compañero Juan David Rios**
+
+El trabajo de mi compañero Juan David estaba más organizado que el mio, el código estaba en un orden más adecuado y en la bitácora la jerarquía y el orden eran mejores, puedo decir con seguridad que he aprendido mucho de lo que el hizo, mas alla en el código de igual manera eran muy similares así que (sin mencionar los estético) funcionalmente no veo mayores cambios.
+
+## Actividad 9
+
+#### Feedback
+
+**Continuar: ¿Qué actividad, video o ejemplo de esta unidad te resultó más inspirador o te ayudó más a entender el potencial de los sistemas físicos interactivos?**
+* A mi me gustó mucho el de Mario Kart, principalmente porque siempre me ha apasionado mucho y me dio un cierto impulso para sentirme más inspirado.
+
+**Dejar de hacer: ¿Hubo alguna parte que te pareció demasiado abstracta, muy rápida o confusa? ¿Hay algo que crees que podríamos cambiar para que sea más claro?**
+* Todo muy bien explicado y si se pudiera decir que algo tuvo cierto nivel de "abstracción", fue muy positivo.
+
+**Empezar a hacer: ¿Qué te genera más curiosidad ahora? ¿Te gustaría explorar más sensores del micro:bit (luz, temperatura), crear visualizaciones más complejas en p5.js o ver más ejemplos de proyectos artísticos?**
+* Saber que estamos apenas empezando me genera curiosidad por muchas cosas aunque parezcan complejas.
+
+**Balance inspiración vs. técnica: ¿Cómo sentiste el equilibrio entre ver los videos inspiradores de la Actividad 01 y la parte técnica de conectar las herramientas en las actividades 03-06?**
+* Un balance bueno, porque estamos apuntando hacia algo que puede llegar a ser grande (gracias a los videos) pero al tiempo con las actividades vamos yendo paso a paso.
+
+**Comentario adicional: ¿Hay algo más que quieras compartir sobre tu experiencia en esta unidad introductoria?**
+* Siento, como dije antes, que es muy temprano para tener una opinión concreta sobre lo que ha pasado y pasará en el curso, pero sobre ésta unidad introductoria no siento que haya pasado algo negativo.
