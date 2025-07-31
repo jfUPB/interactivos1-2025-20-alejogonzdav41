@@ -29,33 +29,43 @@ from microbit import *
 import utime
 
 class Semaforo:
-    def __init__(self):
-        self.state = "ROJO"
-        self.startTime = utime.ticks_ms()
+    def init(self):
+        self.state = "Init"
+        self.startTime = 0
         self.interval = 0
-        self.set_state("ROJO")
-    def set_state(self, new_state):
-        self.state = new_state
-        self.startTime = utime.ticks_ms()
+        self.color = "ROJO"
+
+    def mostrar_color(self):
         display.clear()
-        if self.state == "ROJO":
+        if self.color == "ROJO":
             display.set_pixel(2, 0, 9)
             self.interval = 3000
-        elif self.state == "VERDE":
+        elif self.color == "VERDE":
             display.set_pixel(2, 4, 9)
             self.interval = 3000
-        elif self.state == "AMARILLO":
+        elif self.color == "AMARILLO":
             display.set_pixel(2, 2, 9)
             self.interval = 1000
+
+    def cambiar_color(self):
+        if self.color == "ROJO":
+            self.color = "VERDE"
+        elif self.color == "VERDE":
+            self.color = "AMARILLO"
+        elif self.color == "AMARILLO":
+            self.color = "ROJO"
+
     def update(self):
-        elapsed = utime.ticks_diff(utime.ticks_ms(), self.startTime)
-        if elapsed > self.interval:
-            if self.state == "ROJO":
-                self.set_state("VERDE")
-            elif self.state == "VERDE":
-                self.set_state("AMARILLO")
-            elif self.state == "AMARILLO":
-                self.set_state("ROJO")
+        if self.state == "Init":
+            self.startTime = utime.ticks_ms()
+            self.state = "WaitTimeout"
+            self.mostrar_color()
+
+        elif self.state == "WaitTimeout":
+            if utime.ticks_diff(utime.ticks_ms(), self.startTime) > self.interval:
+                self.cambiar_color()
+                self.startTime = utime.ticks_ms()
+                self.mostrar_color()
 
 semaforo = Semaforo()
 
@@ -67,6 +77,6 @@ while True:
 
 * Estados: VERDE, AMARILLO Y ROJO.
 
-* Eventos: Interval que es el tiempo transcurrido entre los estados.
+* Eventos: Que el tiempo necesario para las acciones ocurra.
 
 * Acciones:  Encender el LED correspondiente al estado, actualizar temporizador y cambiar el estado.
