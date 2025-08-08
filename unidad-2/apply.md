@@ -49,10 +49,6 @@ while True:
             time_left = time_value
             state = STATE_ARMED
 
-        if pin_logo.is_touched():
-            time_value = 20
-            show_time_left()
-
     elif state == STATE_ARMED:
         current_time = utime.ticks_ms()
         if utime.ticks_diff(current_time, start_time) >= 1000:
@@ -62,10 +58,8 @@ while True:
 
             if time_left == 0:
                 state = STATE_KABOOM
+        display.show(Image.SKULL)
 
     elif state == STATE_KABOOM:
-        display.show(Image.SKULL)
- 
-        if button_a.is_pressed() and button_b.is_pressed():
-            state = STATE_INT
 ```
+
