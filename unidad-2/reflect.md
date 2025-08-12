@@ -40,6 +40,7 @@
 
 **Ahora que entiendes el patrón de máquina de estados, ¿En qué otro tipo de proyecto o sistema de entretenimiento digital crees que podrías aplicarlo?**
 
-* Por la perspectiva que me brindo la unidad creo que se podria aplicar para video juegos
+* Por la perspectiva que me brindo la unidad creo que se podria aplicar para video juegos.
+
 
 
