@@ -7,19 +7,21 @@
 
 **Describe con tus palabras qué es una máquina de estados. ¿Cuáles son sus cuatro componentes fundamentales que has utilizado en esta unidad?**
 
-* 
+* Es una forma de organizar un programa dividiéndolo en estados, solo puede estar en un estado a la vez, y cambia a otros estados según eventos o condiciones.
+
+* Estados, eventos y acciones (no recuerdo el cuarto componente).
 
 **Explica por qué la técnica de máquina de estados es tan útil para gestionar la “concurrencia” (atender un temporizador y botones “al mismo tiempo”) en un dispositivo con un solo hilo de ejecución como el micro:bit. ¿Qué problema soluciona en comparación con usar funciones como sleep()?**
 
-*
+* Porque la máquina de estados permite ir revisando constantemente el estado del sistema sin quedarse bloqueado en una sola tarea. Esto evita problemas como con el sleep(), que congela todo y no permite atender otros eventos mientras espera
 
 **Imagina que tienes que añadir una nueva funcionalidad a la bomba temporizada: si se agita (shake) el micro:bit mientras la cuenta regresiva está activa, el tiempo se reduce a la mitad. ¿Cómo modificarías tu diagrama de máquina de estados para incluir este nuevo evento y acción?**
 
-*
+* Agregaria un nuevo evento que fuese shake_detect en el estado STATE_ARMED y le asociaria una accion que seria time_left = time_left / 2.
 
 **Explica qué es un “vector de prueba” y por qué es una herramienta crucial para verificar que una máquina de estados funciona como se espera.**
 
-*
+* Es una lista organizada de eventos y el resultado esperado para cada uno de ellos. Es crucial porque de este modo podemos verificar paso a paso que la máquina de estados responde correctamente en todas las situaciones previstas.
 
 **Parte 2: reflexión sobre tu proceso (Metacognición)**
 
@@ -39,4 +41,5 @@
 **Ahora que entiendes el patrón de máquina de estados, ¿En qué otro tipo de proyecto o sistema de entretenimiento digital crees que podrías aplicarlo?**
 
 * Por la perspectiva que me brindo la unidad creo que se podria aplicar para video juegos
+
 
