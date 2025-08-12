@@ -50,3 +50,22 @@
 
 ### Actividad 8
 
+**Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?**
+
+* 
+
+**Dejar de hacer: ¿Hubo algún paso o actividad que te pareció confuso, innecesariamente complicado o que aportó poco a tu aprendizaje? ¿Qué cambiarías o eliminarías?**
+
+* No siento que hubiera algo que realmente haya aportado poco aprendizaje, pero por la parte de la programacion para mi si fue un tanto complicado.
+
+**Empezar a hacer: ¿Qué te habría ayudado a entender mejor?**
+
+* Tal vez practicar mas el programar o hacer mas preguntas en clase.
+
+**Ritmo y dificultad: En una escala del 1 (muy fácil) al 5 (muy difícil), ¿Cómo calificarías la dificultad de pasar del análisis de un programa (Actividad 03) al diseño desde cero de uno complejo (Actividad 04 y 05)? ¿Por qué?**
+
+* 4, porque desde cero al no tener como esas ayuditas a veces se complica la identificacion de los componentes de la maquina de estados.
+
+**Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?**
+
+* Pues gracias a la retroalimentacion del profe se como mejorar mis futuros proyectos.
