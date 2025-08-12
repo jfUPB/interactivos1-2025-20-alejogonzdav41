@@ -52,7 +52,7 @@
 
 **Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?**
 
-* 
+* Aunque fuera complicada la actividad de la bomba fue la que me ayudo a comprender de mejor manera la unidad.
 
 **Dejar de hacer: ¿Hubo algún paso o actividad que te pareció confuso, innecesariamente complicado o que aportó poco a tu aprendizaje? ¿Qué cambiarías o eliminarías?**
 
@@ -69,3 +69,4 @@
 **Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?**
 
 * Pues gracias a la retroalimentacion del profe se como mejorar mis futuros proyectos.
+
