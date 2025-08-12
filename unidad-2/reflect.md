@@ -3,6 +3,8 @@
 
 ## 🤔 Fase: Reflect
 
+### ACtividad 6
+
 **Parte 1: recuperación de conocimiento (Retrieval Practice)**
 
 **Describe con tus palabras qué es una máquina de estados. ¿Cuáles son sus cuatro componentes fundamentales que has utilizado en esta unidad?**
@@ -42,5 +44,9 @@
 
 * Por la perspectiva que me brindo la unidad creo que se podria aplicar para video juegos.
 
+### Actividad 7
 
+* Como compañero de trabajo elegi a Juan David, note que su codigo era mejor que el mio en cuanto al orden en el que organizaba las cosas y de que no tenia cosas que no fueran fundamentales, vi que debo aprender de ese tipo de cosas para mejorar mis futuros trabajos.
+
+### Actividad 8
 
