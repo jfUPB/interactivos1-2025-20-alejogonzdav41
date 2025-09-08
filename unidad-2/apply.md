@@ -3,6 +3,7 @@
 
 ## 🛠 Fase: Apply
 
+
 ## :tools: Fase: Apply
 
 <img width="1187" height="943" alt="image" src="https://github.com/user-attachments/assets/e1b97933-45c2-4052-aaf1-45beaf2afabb" />

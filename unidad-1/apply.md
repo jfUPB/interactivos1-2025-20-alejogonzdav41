@@ -2,6 +2,7 @@
 
 ## 🛠 Fase: Apply
 
+
 ## Actividad 5
 
 * Input Microbit: Boton A
@@ -81,3 +82,4 @@ while True:
           uart.write('A')
           uart.write('B')
 ```
+
