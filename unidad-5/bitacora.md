@@ -331,3 +331,11 @@ Con un poco de ayuda de chatgpt me dí cuenta de varios cambios importantes resp
 * Se decodifican los datos con DataView en big-endian (false).
 
 * Si el botón B está presionado, se borra el canvas.
+
+| CRITERIOS | NOTA | JUSTIFICACIÓN|
+|----------|----------|----------|
+| 1. Profundidad de la Indagación  | 4 | Por medio de la información en la guía y también de las investigaciones de conceptos fuera de ella logré conseguir tener una indagación profunda, aunque de igual manera podrá mejorar.  |
+| 2. Calidad de la Experimentación | 3.9 | Siento que a pesar de que me tomé mi tiempo para experimentar y ver diferentes ejemplos lo podría haber hecho mucho mejor.. |
+| 3. Análisis y Reflexión | 4.1 | Analisé los resultados que iba consiguiendo y a veces tomaba ayuda de la IA para comprender conceptos y demás.|
+| 4. Apropiación y Articulación de Conceptos | 4 | Logré aplicar los conceptos adquiridos en multiples casos que fueron aprovechados para las actividades. |
+| TOTAL| 4 | |
