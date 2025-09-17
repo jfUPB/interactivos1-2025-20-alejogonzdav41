@@ -145,3 +145,189 @@ En p5.js se implementó un buffer de bytes, se busca siempre el header y se vali
 
 En la consola del p5.js ahora se ven los valores de microBitX y microBitY bien centrados, y los estados de los botones aparecen correctos (true o false) sin que se “dañen” como antes. Si hay un error, aparece un mensaje de "Checksum error in packet" pero ya no se ve que los datos se mezclen.
 
+### Actividad 4
+
+***Codigo modificado para soportar el codigo de microbit de esa unidad***
+```js
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>P_2_0_02 + Micro:bit (Binario)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fafafa;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    #connect {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background: #0077cc;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #connect:hover {
+      background: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Dibujo interactivo con p5.js + micro:bit (Binario)</h2>
+  <button id="connect">Conectar micro:bit</button>
+
+  <!-- Librería p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+  <script>
+    'use strict';
+
+    // Variables globales para datos del micro:bit
+    let microbitX = 0;
+    let microbitY = 0;
+    let microbitA = false;
+    let microbitB = false;
+
+    let port;
+    let reader;
+    let buffer = [];
+
+    document.getElementById("connect").addEventListener("click", async () => {
+      try {
+        port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 115200 });
+        reader = port.readable.getReader();
+        readLoop();
+      } catch (err) {
+        console.error("Error al conectar con el micro:bit:", err);
+      }
+    });
+
+    async function readLoop() {
+      while (true) {
+        try {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (value) {
+            for (let byte of value) {
+              buffer.push(byte);
+              processBuffer();
+            }
+          }
+        } catch (err) {
+          console.error("Error leyendo datos:", err);
+          break;
+        }
+      }
+    }
+
+    function processBuffer() {
+      // Un paquete tiene: header (1) + datos (6) + checksum (1) = 8 bytes
+      while (buffer.length >= 8) {
+        // Buscar header (0xAA)
+        if (buffer[0] !== 0xAA) {
+          buffer.shift(); // eliminar bytes basura
+          continue;
+        }
+
+        let packet = buffer.slice(0, 8);
+        let data = packet.slice(1, 7);
+        let checksum = packet[7];
+
+        // Calcular checksum esperado
+        let sum = data.reduce((a, b) => a + b, 0) % 256;
+
+        if (checksum === sum) {
+          // Decodificar datos binarios
+          let view = new DataView(new Uint8Array(data).buffer);
+          microbitX = view.getInt16(0, false); // big-endian
+          microbitY = view.getInt16(2, false);
+          microbitA = view.getUint8(4) === 1;
+          microbitB = view.getUint8(5) === 1;
+
+          if (microbitB) {
+            background(255);
+          }
+
+          // quitar paquete procesado del buffer
+          buffer.splice(0, 8);
+        } else {
+          console.warn("Checksum incorrecto, descartando paquete");
+          buffer.shift();
+        }
+      }
+    }
+
+    function setup() {
+      createCanvas(720, 720);
+      noFill();
+      background(255);
+      strokeWeight(2);
+      stroke(0, 25);
+    }
+
+    function draw() {
+      let xPos = mouseIsPressed ? mouseX : map(microbitX, -1024, 1024, 0, width);
+      let yPos = mouseIsPressed ? mouseY : map(microbitY, -1024, 1024, 0, height);
+      let isDrawing = mouseIsPressed || microbitA; // Botón A dibuja
+
+      if (isDrawing) {
+        push();
+        translate(width / 2, height / 2);
+
+        let circleResolution = int(map(yPos + 100, 0, height, 2, 10));
+        let radius = xPos - width / 2;
+        let angle = TAU / circleResolution;
+
+        beginShape();
+        for (let i = 0; i <= circleResolution; i++) {
+          let x = cos(angle * i) * radius;
+          let y = sin(angle * i) * radius;
+          vertex(x, y);
+        }
+        endShape();
+
+        pop();
+      }
+    }
+
+    function keyReleased() {
+      if (keyCode == DELETE || keyCode == BACKSPACE) background(255);
+      if (key == 's' || key == 'S') saveCanvas(Date.now().toString(), 'png');
+    }
+  </script>
+</body>
+</html>
+
+```
+
+<img width="1811" height="991" alt="image" src="https://github.com/user-attachments/assets/99bc0d6d-18c9-4643-925b-e95c9f844bb0" />
+
+<img width="1841" height="1001" alt="image" src="https://github.com/user-attachments/assets/decbbb66-543a-49b8-906b-4b908ec40e8d" />
+
+<img width="1868" height="997" alt="image" src="https://github.com/user-attachments/assets/8e21f9de-a41e-4b2d-a189-f0bafb9a3e78" />
+
+
+Con un poco de ayuda de chatgpt me dí cuenta de varios cambios importantes respecto al original:
+
+* Se eliminó el TextDecoder, ya que no trabajamos con texto.
+
+* Se usa un buffer de bytes (buffer) para armar paquetes de 8 bytes.
+
+* Se valida el header (0xAA) y el checksum antes de usar los datos.
+
+* Se decodifican los datos con DataView en big-endian (false).
+
+* Si el botón B está presionado, se borra el canvas.
