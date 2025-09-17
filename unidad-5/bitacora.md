@@ -34,13 +34,9 @@ Capturas de pantalla de los algunos dibujos que hayas hecho con el sketch.
 
 **1. ¿Por qué se ve este resultado?**
 
-<img width="559" height="275" alt="image" src="https://github.com/user-attachments/assets/874652e7-af55-4aab-95cf-c1a3b44a6f69" />
-
 * Cuando pongo la opción de Texto, se ven símbolos raros o “caracteres basura” porque los datos ya no se envían en letras o números que pueda entender directamente el computador, sino en binario. El micro:bit manda bytes crudos y el programa intenta interpretarlos como si fueran letras ASCII, entonces aparecen cosas que no tienen sentido.
 
 **2. Lo que ves ¿Cómo está relacionado con esta línea de código?**
-
-<img width="600" height="312" alt="image" src="https://github.com/user-attachments/assets/8ad5230c-8551-467d-a01a-8a8b3f9daf9e" />
 
 * Cuando selecciono la vista en Hex, los datos ya se muestran como números en base 16. Esto sí tiene sentido porque cada número hexadecimal representa un byte de los que se empacaron con struct.pack. La relación es que justo ese formato >2h2B define cuántos bytes se mandan y en qué orden, y por eso el resultado en Hex coincide con lo que se empaquetó.
 
@@ -109,3 +105,35 @@ O sea, los negativos se representan con bytes que parecen grandes en Hex, pero e
 * Ocupa más espacio (cada número puede tener varios caracteres).
 
 * Es más lento al enviar y procesar.
+
+### Actividad 3
+
+**1. ¿Por qué en la unidad anterior teníamos que enviar la información delimitada y además marcada con un salto de línea y ahora no es necesario?**
+
+En la unidad anterior teníamos que mandar los datos como texto y en una sola línea, entonces el programa de p5.js no sabía dónde terminaba un dato y dónde empezaba el otro. Por eso se usaba un delimitador (una coma, por ejemplo) y un salto de línea para que quedara claro dónde acababa el paquete de datos.
+Ahora ya no es necesario porque estamos mandando los datos en binario y el tamaño del paquete es fijo (6 bytes o 8 bytes con framing). Entonces el programa sabe que cada vez que recibe esos 6 u 8 bytes completos ya tiene toda la información, sin importar si llegan seguidos o no.
+
+**2. Compara el código de la unidad anterior relacionado con la recepción de los datos seriales que ves ahora. ¿Qué cambios observas?**
+
+Antes el código recibía los datos como texto, los separaba con split() y luego convertía cada pedazo en número o en booleano.
+Ahora en cambio, el código usa readBytes() para leer directamente los bytes, crea un DataView y de ahí saca los números enteros (getInt16) y los estados (getUint8). En resumen: antes se trabajaba con texto y conversiones, ahora se trabaja con binario y estructuras de bytes.
+
+**3. ¿Qué ves en la consola? ¿Por qué crees que se produce este error?**
+
+En la consola a veces aparecen valores raros, como que microBitY no es el mismo que se mandó o que los botones salen apagados aunque estaban encendidos.
+Eso pasa porque p5.js a veces agarra 6 bytes que no corresponden exactamente al mismo paquete que mandó el micro:bit. O sea, empieza a leer desde la mitad de un paquete y mezcla bytes de dos mensajes distintos. Eso es un error de sincronización.
+
+**4. Analiza el código con framing, observa los cambios. Ejecuta y luego observa la consola. ¿Qué ves?**
+
+Con framing ahora siempre hay un byte de inicio (0xAA) y un checksum al final para validar que los datos llegaron bien.
+En la consola ya no aparecen valores locos ni saltos raros. Si el checksum no cuadra, el programa simplemente descarta ese paquete y espera al siguiente. Entonces los datos de microBitX, microBitY y los botones son más estables y confiables.
+
+**5. ¿Qué cambios tienen los programas y qué puedes observar en la consola del editor de p5.js?**
+
+***Los cambios son:***
+
+En el micro:bit se agregó el header (0xAA) y el checksum al paquete.
+
+En p5.js se implementó un buffer de bytes, se busca siempre el header y se valida el checksum antes de usar los datos.
+
+En la consola del p5.js ahora se ven los valores de microBitX y microBitY bien centrados, y los estados de los botones aparecen correctos (true o false) sin que se “dañen” como antes. Si hay un error, aparece un mensaje de "Checksum error in packet" pero ya no se ve que los datos se mezclen.
