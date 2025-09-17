@@ -106,6 +106,13 @@ O sea, los negativos se representan con bytes que parecen grandes en Hex, pero e
 
 * Es más lento al enviar y procesar.
 
+***Fotos de la actividad***
+
+<img width="1237" height="277" alt="image" src="https://github.com/user-attachments/assets/162ae24b-18b0-496e-acaa-e8b2accfac61" />
+<img width="1255" height="255" alt="image" src="https://github.com/user-attachments/assets/9f8b4a06-7c23-4d94-bda9-3762729d908c" />
+<img width="1262" height="264" alt="image" src="https://github.com/user-attachments/assets/825fae8b-2429-404d-ae7f-8cf2cb9f7912" />
+
+
 ### Actividad 3
 
 **1. ¿Por qué en la unidad anterior teníamos que enviar la información delimitada y además marcada con un salto de línea y ahora no es necesario?**
@@ -137,3 +144,4 @@ En el micro:bit se agregó el header (0xAA) y el checksum al paquete.
 En p5.js se implementó un buffer de bytes, se busca siempre el header y se valida el checksum antes de usar los datos.
 
 En la consola del p5.js ahora se ven los valores de microBitX y microBitY bien centrados, y los estados de los botones aparecen correctos (true o false) sin que se “dañen” como antes. Si hay un error, aparece un mensaje de "Checksum error in packet" pero ya no se ve que los datos se mezclen.
+
