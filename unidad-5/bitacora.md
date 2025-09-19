@@ -13,6 +13,9 @@ Cada paquete tiene cuatro valores separados por comas y termina con un salto de 
 El orden siempre es el mismo: primero X, luego Y, después el botón A y al final el botón B.
 
 Muestra y explica la parte del código de p5.js donde lee los datos del micro:bit y los transforma en coordenadas de la pantalla.
+
+
+
 ```js
 let data = port.readUntil("\n");
 let values = data.split(",");
@@ -108,8 +111,13 @@ O sea, los negativos se representan con bytes que parecen grandes en Hex, pero e
 
 ***Fotos de la actividad***
 
+<a name="im1"></a>
+Captura de los datos:
+
 <img width="1237" height="277" alt="image" src="https://github.com/user-attachments/assets/162ae24b-18b0-496e-acaa-e8b2accfac61" />
+
 <img width="1255" height="255" alt="image" src="https://github.com/user-attachments/assets/9f8b4a06-7c23-4d94-bda9-3762729d908c" />
+
 <img width="1262" height="264" alt="image" src="https://github.com/user-attachments/assets/825fae8b-2429-404d-ae7f-8cf2cb9f7912" />
 
 
@@ -334,8 +342,9 @@ Con un poco de ayuda de chatgpt me dí cuenta de varios cambios importantes resp
 
 | CRITERIOS | NOTA | JUSTIFICACIÓN|
 |----------|----------|----------|
-| 1. Profundidad de la Indagación  | 4 | Por medio de la información en la guía y también de las investigaciones de conceptos fuera de ella logré conseguir tener una indagación profunda, aunque de igual manera podrá mejorar.  |
+| 1. Profundidad de la Indagación  | 4 | Por medio de la información en la guía y también de las investigaciones de conceptos fuera de ella logré conseguir tener una indagación profunda, aunque de igual manera podrá mejorar. (Ejemplo del profe para ver enlaces) Ver [esta evidencia](#im1) |
 | 2. Calidad de la Experimentación | 3.9 | Siento que a pesar de que me tomé mi tiempo para experimentar y ver diferentes ejemplos lo podría haber hecho mucho mejor.. |
 | 3. Análisis y Reflexión | 4.1 | Analisé los resultados que iba consiguiendo y a veces tomaba ayuda de la IA para comprender conceptos y demás.|
 | 4. Apropiación y Articulación de Conceptos | 4 | Logré aplicar los conceptos adquiridos en multiples casos que fueron aprovechados para las actividades. |
 | TOTAL| 4 | |
+
