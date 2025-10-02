@@ -189,7 +189,11 @@ Detén el servidor Node.js (Ctrl+C).
 
 Refresca la página page2.html. Observa la consola del navegador. ¿Ves algún error relacionado con la conexión? ¿Qué indica?
 
+<img width="553" height="176" alt="image" src="https://github.com/user-attachments/assets/313f0376-e862-4c6b-bed7-ff73f82139e8" />
+
 Vuelve a iniciar el servidor y refresca la página. ¿Desaparecen los errores?
+
+- Si, los errores desaparecieron.
 
 🧐🧪✍️
 Experimenta
@@ -201,6 +205,11 @@ Reinicia el servidor y refresca page1.html y page2.html.
 Mueve la ventana de page2 un poco para que envíe una actualización.
 
 ¿Qué pasó? ¿Por qué?
+
+<img width="1139" height="538" alt="image" src="https://github.com/user-attachments/assets/78b0c15c-c721-4761-ac35-27da08d150ad" />
+<img width="1074" height="467" alt="image" src="https://github.com/user-attachments/assets/b36fdbeb-a20e-481e-8356-67af44e75729" />
+
+- Cuando comenté la linea especificada se cortó la conección entre las dos páginas.
 
 🧐🧪✍️
 Experimenta
@@ -909,6 +918,7 @@ server.listen(port, () => {
 ```
 
 ### Autoevaluación
+
 
 
 
