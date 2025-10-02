@@ -168,3 +168,4 @@ Intenta abrir http://localhost:3001/page1. ¿Funciona?
 ### Actividad 5
 
 <img width="938" height="535" alt="image" src="https://github.com/user-attachments/assets/e7dd60b9-f0fd-4e0b-a065-0dea81dbb980" />
+
