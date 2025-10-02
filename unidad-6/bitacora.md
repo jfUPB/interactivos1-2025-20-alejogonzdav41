@@ -921,10 +921,11 @@ server.listen(port, () => {
 
 Nota: 4.5
 
-Realicé todas las actividades menos la parte de creatividad de la actividad 4,
+Realicé todas las actividades menos la parte de creatividad de la actividad 4, a parte de eso que me faltó pude realizar las actividades y mostrar evidencias de las mismas, por ejemplo, en la actividad 1 viendo como se comunicaban las [paginas con el servidor](#im1) o la funcionalidad de las [dos esferas entre las dos páginas](#im2), 
 
+<a name="im1"></a>
 
-
+[aquí](#im1)
 
 
 
