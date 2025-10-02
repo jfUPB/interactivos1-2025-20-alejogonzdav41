@@ -167,5 +167,688 @@ Intenta abrir http://localhost:3001/page1. ¿Funciona?
 
 ### Actividad 5
 
+Mi idea es que en la pagina 1 haya un circulo con un triangulo pegado a un lado (como un cañon) que dispare circulos pequeños cada 4 segundos a la pagina dos, ya en la pagina 2 despues de estar 1 segundo los circulos peequeños explotan en 3 cuadrados que desaparecen a lo largo de 3 segundos.
+
 <img width="938" height="535" alt="image" src="https://github.com/user-attachments/assets/e7dd60b9-f0fd-4e0b-a065-0dea81dbb980" />
+
+<img width="1583" height="494" alt="image" src="https://github.com/user-attachments/assets/c4a4a993-e55f-4c0c-a41c-24c7a1dd87b3" />
+<img width="1671" height="493" alt="image" src="https://github.com/user-attachments/assets/07f4caf5-c3c2-47f7-b2d7-e378c88d08b0" />
+<img width="1657" height="485" alt="image" src="https://github.com/user-attachments/assets/0d7cb22c-5110-4e79-82b8-afeb7a96b37b" />
+<img width="727" height="841" alt="image" src="https://github.com/user-attachments/assets/f55b3679-5d3c-4314-a9fa-ea190067fa72" />
+<img width="1745" height="966" alt="image" src="https://github.com/user-attachments/assets/56b2f929-090f-4f32-89b6-baec624f8218" />
+
+***page1.html***
+```cpp
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Asalto - Cañón (Page 1)</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.0/lib/p5.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1e1e1e;
+        }
+    </style>
+</head>
+<body>
+    <script defer src="page1.js"></script>
+</body>
+</html>
+```
+
+***page1.js***
+```cpp
+let currentPageData = {
+    x: window.screenX,
+    y: window.screenY,
+    width: window.innerWidth,
+    height: window.innerHeight
+}
+
+let previousPageData = {
+    x: window.screenX,
+    y: window.screenY,
+    width: window.innerWidth,
+    height: window.innerHeight
+};
+
+let remotePageData = { x: 0, y: 0, width: 100, height: 100 };
+let socket;
+let isConnected = false;
+let hasRemoteData = false;
+let isFullySynced = false;
+
+let cannon;
+let lastFireTime = 0;
+const fireInterval = 4000;
+
+class Cannon {
+    constructor(x, y, size) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.bodyColor = color(50, 50, 200);
+        this.barrelColor = color(100, 100, 255);
+    }
+
+    draw(targetX, targetY) {
+        let angle = atan2(targetY - this.y, targetX - this.x);
+
+        push();
+        translate(this.x, this.y);
+        rotate(angle);
+
+        fill(this.barrelColor);
+        rectMode(CORNER);
+        rect(this.size / 2, -this.size / 8, this.size * 1.2, this.size / 4);
+
+        pop();
+
+        fill(this.bodyColor);
+        ellipse(this.x, this.y, this.size, this.size);
+    }
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    frameRate(60);
+    socket = io();
+    cannon = new Cannon(width / 2, height / 2, 100); 
+
+    socket.on('connect', () => {
+        console.log('Connected with ID:', socket.id);
+        isConnected = true;
+        socket.emit('win1update', currentPageData, socket.id);
+        setTimeout(() => { socket.emit('requestSync'); }, 500);
+    });
+
+    socket.on('getdata', (response) => {
+        if (response && response.data && isValidRemoteData(response.data)) {
+            remotePageData = response.data;
+            hasRemoteData = true;
+            console.log('Received valid remote data (Page 2):', remotePageData);
+            socket.emit('confirmSync');
+        }
+    });
+
+    socket.on('fullySynced', (synced) => {
+        isFullySynced = synced;
+        console.log('Sync status:', synced ? 'SYNCED' : 'NOT SYNCED');
+    });
+
+    socket.on('peerDisconnected', () => {
+        hasRemoteData = false;
+        isFullySynced = false;
+        console.log('Peer disconnected, waiting for reconnection...');
+    });
+
+    socket.on('disconnect', () => {
+        isConnected = false;
+        hasRemoteData = false;
+        isFullySynced = false;
+        console.log('Disconnected from server');
+    });
+}
+
+function isValidRemoteData(data) {
+    return data && 
+           typeof data.x === 'number' && 
+           typeof data.y === 'number' && 
+           typeof data.width === 'number' && data.width > 0 &&
+           typeof data.height === 'number' && data.height > 0;
+}
+
+function checkWindowPosition() {
+    currentPageData = {
+        x: window.screenX,
+        y: window.screenY,
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
+
+    if (currentPageData.x !== previousPageData.x || currentPageData.y !== previousPageData.y || 
+        currentPageData.width !== previousPageData.width || currentPageData.height !== previousPageData.height) {
+
+        socket.emit('win1update', currentPageData, socket.id);
+        previousPageData = currentPageData;
+    }
+}
+
+function fireProjectile(startX, startY, targetX, targetY) {
+    let angle = atan2(targetY - startY, targetX - startX);
+    let fireRadius = cannon.size / 2 + cannon.size * 1.2; 
+    let projectileStartX = startX + cos(angle) * fireRadius * 0.5;
+    let projectileStartY = startY + sin(angle) * fireRadius * 0.5;
+
+    let screenX = currentPageData.x + projectileStartX;
+    let screenY = currentPageData.y + projectileStartY;
+    
+    const projectileData = {
+        id: Date.now(),
+        startX: screenX,
+        startY: screenY,
+        targetX: remotePageData.x + remotePageData.width / 2,
+        targetY: remotePageData.y + remotePageData.height / 2,
+        timestamp: millis()
+    };
+
+    socket.emit('fireProjectile', projectileData);
+    console.log('Fired projectile:', projectileData.id);
+}
+
+function draw() {
+    background(30);
+
+    if (isFullySynced) {
+        checkWindowPosition();
+
+        cannon.x = width / 2;
+        cannon.y = height / 2;
+
+        let targetX_screen = remotePageData.x + remotePageData.width / 2;
+        let targetY_screen = remotePageData.y + remotePageData.height / 2;
+        
+        let localCannonX_screen = currentPageData.x + cannon.x;
+        let localCannonY_screen = currentPageData.y + cannon.y;
+
+        let targetX_local = targetX_screen - localCannonX_screen + cannon.x;
+        let targetY_local = targetY_screen - localCannonY_screen + cannon.y;
+
+        cannon.draw(targetX_local, targetY_local);
+
+        stroke(100, 100, 100, 100);
+        strokeWeight(1);
+        line(cannon.x, cannon.y, targetX_local, targetY_local);
+
+        if (millis() - lastFireTime > fireInterval) {
+            fireProjectile(cannon.x, cannon.y, targetX_local, targetY_local);
+            lastFireTime = millis();
+        }
+    }
+    
+    showStatus(getStatusMessage(), getStatusColor());
+}
+
+function getStatusMessage() {
+    if (!isConnected) return 'Conectando al servidor...';
+    if (!hasRemoteData) return 'Esperando conexión de la otra ventana...';
+    if (!isFullySynced) return 'Sincronizando datos...';
+    return 'SINCRONIZADO: ¡Cañón Activo! (Disparo en 4s)';
+}
+
+function getStatusColor() {
+    if (!isConnected || !hasRemoteData || !isFullySynced) return color(255, 165, 0);
+    return color(0, 255, 0);
+}
+
+function showStatus(message, statusColor) {
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    noStroke();
+    fill(0, 0, 0, 150);
+    rectMode(CENTER);
+    let textW = textWidth(message) + 40;
+    let textH = 40;
+    rect(width / 2, 1 * height / 10, textW, textH, 10);
+    fill(statusColor);
+    text(message, width / 2, 1 * height / 10);
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    if (cannon) {
+        cannon.x = width / 2;
+        cannon.y = height / 2;
+    }
+}
+
+```
+
+***page2.html***
+```cpp
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Asalto - Receptor (Page 2)</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.0/lib/p5.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1e1e1e;
+        }
+    </style>
+</head>
+
+<body>
+    <script defer src="page2.js"></script>
+</body>
+</html>
+```
+
+***page2.js***
+```cpp
+let currentPageData = {
+    x: window.screenX,
+    y: window.screenY,
+    width: window.innerWidth,
+    height: window.innerHeight
+
+}
+
+let previousPageData = {
+    x: window.screenX,
+    y: window.screenY,
+    width: window.innerWidth,
+    height: window.innerHeight
+};
+
+let remotePageData = { x: 0, y: 0, width: 100, height: 100 };
+let point2 = [currentPageData.width / 2, currentPageData.height / 2];
+let socket;
+let isConnected = false;
+let hasRemoteData = false;
+let isFullySynced = false;
+
+let projectiles = [];
+let explosions = [];
+const projectileSpeed = 0.5;
+
+class Projectile {
+    constructor(data) {
+        this.id = data.id;
+        this.startScreenX = data.startX;
+        this.startScreenY = data.startY;
+        this.targetScreenX = data.targetX;
+        this.targetScreenY = data.targetY;
+        this.startTime = data.timestamp;
+        this.diameter = 20;
+        this.color = color(255, 255, 0);
+        this.life = true;
+        this.distance = dist(this.startScreenX, this.startScreenY, this.targetScreenX, this.targetScreenY);
+        this.travelTime = this.distance / projectileSpeed;
+    }
+
+    draw(currentScreenX, currentScreenY) {
+        if (!this.life) return false;
+        
+        let elapsed = millis() - this.startTime;
+        let ratio = min(1, elapsed / this.travelTime);
+
+        let currentAbsX = lerp(this.startScreenX, this.targetScreenX, ratio);
+        let currentAbsY = lerp(this.startScreenY, this.targetScreenY, ratio);
+
+        this.localX = currentAbsX - currentScreenX;
+        this.localY = currentAbsY - currentScreenY;
+
+        fill(this.color);
+        noStroke();
+        ellipse(this.localX, this.localY, this.diameter, this.diameter);
+
+        if (ratio >= 1) {
+            this.life = false;
+            return true;
+        }
+        return false;
+    }
+}
+
+class Explosion {
+    constructor(x, y, id) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.creationTime = millis();
+        this.duration = 4000;
+        this.preExplosionDuration = 1000;
+        this.squareDuration = 3000;
+        this.radius = 20; 
+        this.squares = [];
+        this.colors = [color(255, 0, 0, 200), color(0, 255, 0, 200), color(0, 0, 255, 200)];
+        this.squareSize = 30;
+
+        for (let i = 0; i < 3; i++) {
+            let angle = random(TWO_PI);
+            let distance = random(80, 150);
+            this.squares.push({
+                x: this.x,
+                y: this.y,
+                targetX: this.x + cos(angle) * distance,
+                targetY: this.y + sin(angle) * distance,
+                color: this.colors[i]
+            });
+        }
+    }
+    
+    draw() {
+        let elapsed = millis() - this.creationTime;
+        
+        if (elapsed < this.preExplosionDuration) { 
+            let alpha = map(elapsed, 0, this.preExplosionDuration, 255, 0);
+            fill(255, 200, 0, alpha); 
+            noStroke();
+            ellipse(this.x, this.y, this.radius * 2, this.radius * 2);
+            
+        } else if (elapsed >= this.preExplosionDuration && elapsed < this.duration) { 
+            let explosionElapsed = elapsed - this.preExplosionDuration;
+            let ratio = explosionElapsed / this.squareDuration;
+            
+            for (let i = 0; i < this.squares.length; i++) {
+                let sq = this.squares[i];
+                let currentX = lerp(this.x, sq.targetX, ratio);
+                let currentY = lerp(this.y, sq.targetY, ratio);
+
+                let currentSize = lerp(this.squareSize, 0, ratio); 
+
+                let alpha = map(ratio, 0, 1, 255, 0);
+                sq.color.setAlpha(alpha);
+                
+                fill(sq.color);
+                rectMode(CENTER);
+                noStroke();
+                rect(currentX, currentY, currentSize, currentSize);
+            }
+        } else {
+            return true; 
+        }
+        return false;
+    }
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    frameRate(60);
+    socket = io();
+
+    socket.on('connect', () => {
+        console.log('Connected with ID:', socket.id);
+        isConnected = true;
+        socket.emit('win2update', currentPageData, socket.id);
+        setTimeout(() => { socket.emit('requestSync'); }, 500);
+    });
+
+    socket.on('newProjectile', (data) => {
+        console.log('Received projectile data:', data.id);
+        if (isFullySynced) {
+            projectiles.push(new Projectile(data));
+        }
+    });
+
+
+    socket.on('getdata', (response) => {
+        if (response && response.data && isValidRemoteData(response.data)) {
+            remotePageData = response.data;
+            hasRemoteData = true;
+            console.log('Received valid remote data (Page 1):', remotePageData);
+            socket.emit('confirmSync');
+        }
+    });
+
+    socket.on('fullySynced', (synced) => {
+        isFullySynced = synced;
+        console.log('Sync status:', synced ? 'SYNCED' : 'NOT SYNCED');
+    });
+
+    socket.on('peerDisconnected', () => {
+        hasRemoteData = false;
+        isFullySynced = false;
+        console.log('Peer disconnected, waiting for reconnection...');
+    });
+
+    socket.on('disconnect', () => {
+        isConnected = false;
+        hasRemoteData = false;
+        isFullySynced = false;
+        console.log('Disconnected from server');
+    });
+}
+
+function isValidRemoteData(data) {
+    return data && 
+           typeof data.x === 'number' && 
+           typeof data.y === 'number' && 
+           typeof data.width === 'number' && data.width > 0 &&
+           typeof data.height === 'number' && data.height > 0;
+}
+
+function checkWindowPosition() {
+    currentPageData = {
+        x: window.screenX,
+        y: window.screenY,
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
+
+    if (currentPageData.x !== previousPageData.x || currentPageData.y !== previousPageData.y || 
+        currentPageData.width !== previousPageData.width || currentPageData.height !== previousPageData.height) {
+
+        point2 = [currentPageData.width / 2, currentPageData.height / 2]
+        socket.emit('win2update', currentPageData, socket.id);
+        previousPageData = currentPageData; 
+    }
+}
+
+
+function draw() {
+    background(30);
+    
+    if (isFullySynced) {
+        checkWindowPosition();
+
+        fill(200, 50, 50);
+        ellipse(point2[0], point2[1], 150, 150);
+
+        for (let i = projectiles.length - 1; i >= 0; i--) {
+            let p = projectiles[i];
+
+            let hasArrived = p.draw(currentPageData.x, currentPageData.y);
+            
+            if (hasArrived) {
+                explosions.push(new Explosion(p.localX, p.localY, p.id));
+                projectiles.splice(i, 1);
+            }
+        }
+
+        for (let i = explosions.length - 1; i >= 0; i--) {
+            let exp = explosions[i];
+            let isFinished = exp.draw();
+            
+            if (isFinished) {
+                socket.emit('explosionFinished', exp.id);
+                explosions.splice(i, 1);
+            }
+        }
+
+        let vector2 = createVector(remotePageData.x, remotePageData.y);
+        let vector1 = createVector(currentPageData.x, currentPageData.y);
+        let resultingVector = createVector(vector2.x - vector1.x, vector2.y - vector1.y);
+
+        fill(50, 50, 200, 150);
+        ellipse(resultingVector.x + remotePageData.width / 2, resultingVector.y + remotePageData.height / 2, 100, 100);
+    }
+    
+    showStatus(getStatusMessage(), getStatusColor());
+}
+
+function getStatusMessage() {
+    if (!isConnected) return 'Conectando al servidor...';
+    if (!hasRemoteData) return 'Esperando conexión de la otra ventana...';
+    if (!isFullySynced) return 'Sincronizando datos...';
+    return `SINCRONIZADO: Proyectiles en tránsito (${projectiles.length}), Explosiones activas (${explosions.length})`;
+}
+
+function getStatusColor() {
+    if (!isConnected || !hasRemoteData || !isFullySynced) return color(255, 165, 0);
+    return color(0, 255, 0);
+}
+
+function showStatus(message, statusColor) {
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    noStroke();
+    fill(0, 0, 0, 150);
+    rectMode(CENTER);
+    let textW = textWidth(message) + 40;
+    let textH = 40;
+    rect(width / 2, 1 * height / 10, textW, textH, 10);
+    fill(statusColor);
+    text(message, width / 2, 1 * height / 10);
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    point2 = [width / 2, height / 2];
+}
+```
+
+***server.js***
+```cpp
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
+const path = require('path');
+const app = express();
+const server = http.createServer(app); 
+const io = socketIO(server); 
+const port = 3000;
+
+let page1 = { x: 0, y: 0, width: 100, height: 100 };
+let page2 = { x: 0, y: 0, width: 100, height: 100 };
+let connectedClients = new Map();
+let syncedClients = new Set();
+let page1SocketId = null;
+let page2SocketId = null;
+
+app.use(express.static(path.join(__dirname, 'views')));
+
+app.get('/page1', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'page1.html'));
+});
+
+app.get('/page2', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'page2.html'));
+});
+
+io.on('connection', (socket) => {
+    console.log('A user connected - ID:', socket.id);
+    connectedClients.set(socket.id, { page: null, synced: false });
+    
+    socket.on('disconnect', () => {
+        console.log('User disconnected - ID:', socket.id);
+        const clientInfo = connectedClients.get(socket.id);
+
+        if (clientInfo?.page === 'page1') {
+            page1SocketId = null;
+        } else if (clientInfo?.page === 'page2') {
+            page2SocketId = null;
+        }
+
+        connectedClients.delete(socket.id);
+        syncedClients.delete(socket.id);
+        socket.broadcast.emit('peerDisconnected');
+        checkAndNotifySyncStatus();
+    });
+
+    socket.on('win1update', (window1, sendid) => {
+        if (isValidWindowData(window1)) {
+            page1 = window1;
+            page1SocketId = socket.id;
+            connectedClients.set(socket.id, { page: 'page1', synced: false });
+            if (page2SocketId) {
+                io.to(page2SocketId).emit('getdata', { data: page1, from: 'page1' });
+            }
+            checkAndNotifySyncStatus();
+        }
+    });
+
+    socket.on('win2update', (window2, sendid) => {
+        if (isValidWindowData(window2)) {
+            page2 = window2;
+            page2SocketId = socket.id;
+            connectedClients.set(socket.id, { page: 'page2', synced: false });
+            if (page1SocketId) {
+                io.to(page1SocketId).emit('getdata', { data: page2, from: 'page2' });
+            }
+            checkAndNotifySyncStatus();
+        }
+    });
+
+    socket.on('requestSync', () => {
+        const clientInfo = connectedClients.get(socket.id);
+        if (clientInfo?.page === 'page1' && page2SocketId) {
+            socket.emit('getdata', { data: page2, from: 'page2' });
+        } else if (clientInfo?.page === 'page2' && page1SocketId) {
+            socket.emit('getdata', { data: page1, from: 'page1' });
+        }
+    });
+
+    socket.on('confirmSync', () => {
+        syncedClients.add(socket.id);
+        const clientInfo = connectedClients.get(socket.id);
+        if (clientInfo) {
+            connectedClients.set(socket.id, { ...clientInfo, synced: true });
+        }
+        checkAndNotifySyncStatus();
+    }); 
+    
+    socket.on('fireProjectile', (projectileData) => {
+        console.log('Projectile fired:', projectileData.id);
+        if (page2SocketId) {
+             io.to(page2SocketId).emit('newProjectile', projectileData);
+        }
+    });
+
+    socket.on('explosionFinished', (id) => {
+        console.log('Explosion finished on Page 2 for ID:', id);
+    });
+});
+
+function isValidWindowData(data) {
+    return data && 
+           typeof data.x === 'number' && 
+           typeof data.y === 'number' && 
+           typeof data.width === 'number' && data.width > 0 &&
+           typeof data.height === 'number' && data.height > 0;
+}
+
+function checkAndNotifySyncStatus() {
+    const page1Clients = Array.from(connectedClients.entries()).filter(([id, info]) => info.page === 'page1');
+    const page2Clients = Array.from(connectedClients.entries()).filter(([id, info]) => info.page === 'page2');
+    
+    const bothPagesConnected = page1Clients.length > 0 && page2Clients.length > 0;
+    const allClientsSynced = bothPagesConnected && page1Clients.every(([id, info]) => syncedClients.has(id)) && page2Clients.every(([id, info]) => syncedClients.has(id));
+    
+    const status = bothPagesConnected && allClientsSynced;
+
+    io.emit('fullySynced', status);
+    if (status) {
+         console.log('All clients are fully synced and ready for interaction.');
+    }
+}
+
+server.listen(port, () => {
+    console.log(`Server is listening on http://localhost:${port}`);
+    console.log(`Open in two windows:`);
+    console.log(`- Page 1: http://localhost:${port}/page1`);
+    console.log(`- Page 2: http://localhost:${port}/page2`);
+});
+```
+
+### Autoevaluación
+
+
+
+
+
+
 
