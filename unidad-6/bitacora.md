@@ -919,6 +919,9 @@ server.listen(port, () => {
 
 ### Autoevaluación
 
+Nota: 4.5
+
+Realicé todas las actividades menos la parte de creatividad de la actividad 4,
 
 
 
