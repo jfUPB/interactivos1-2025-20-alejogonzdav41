@@ -4,7 +4,7 @@
 ### Actividad 1
 
 **¿Qué ocurrió en la terminal cuando ejecutaste npm install? ¿Cuál crees que es su propósito?**  
-
+<a name="im1"></a>
 <img width="689" height="251" alt="image" src="https://github.com/user-attachments/assets/adab24b6-d81b-4f81-a32d-23e91629376d" />
 
 - Apareció el texto que se observa en la imagen, tiene la finalidad de descargar las dependencias.
@@ -13,10 +13,8 @@
 
 <img width="684" height="129" alt="image" src="https://github.com/user-attachments/assets/7e80f4e4-bf48-47c8-a938-4c29a5dceccd" />
 
-- 
-
 **Describe lo que ves inicialmente en page1 y page2 en tu navegador.**  
-
+<a name="im2"></a>
 <img width="1900" height="606" alt="image" src="https://github.com/user-attachments/assets/3cb542aa-34f6-42ee-a217-6b4195ca9f82" />
 
 - Inicialmente en el navegador 1 y 2 se observan dos bolas rojas de contorno negro que tienen una linea negra que sale de la mitad de cada una y que las conecta.
@@ -242,8 +240,12 @@ Inventa otra modificación creativa.
 
 Mi idea es que en la pagina 1 haya un circulo con un triangulo pegado a un lado (como un cañon) que dispare circulos pequeños cada 4 segundos a la pagina dos, ya en la pagina 2 despues de estar 1 segundo los circulos peequeños explotan en 3 cuadrados que desaparecen a lo largo de 3 segundos.
 
+***Boceto***
+<a name="im3"></a>
 <img width="938" height="535" alt="image" src="https://github.com/user-attachments/assets/e7dd60b9-f0fd-4e0b-a065-0dea81dbb980" />
 
+***Aplicado***
+<a name="im4"></a>
 <img width="1583" height="494" alt="image" src="https://github.com/user-attachments/assets/c4a4a993-e55f-4c0c-a41c-24c7a1dd87b3" />
 <img width="1671" height="493" alt="image" src="https://github.com/user-attachments/assets/07f4caf5-c3c2-47f7-b2d7-e378c88d08b0" />
 <img width="1657" height="485" alt="image" src="https://github.com/user-attachments/assets/0d7cb22c-5110-4e79-82b8-afeb7a96b37b" />
@@ -921,14 +923,7 @@ server.listen(port, () => {
 
 Nota: 4.5
 
-Realicé todas las actividades menos la parte de creatividad de la actividad 4, a parte de eso que me faltó pude realizar las actividades y mostrar evidencias de las mismas, por ejemplo, en la actividad 1 viendo como se comunicaban las [paginas con el servidor](#im1) o la funcionalidad de las [dos esferas entre las dos páginas](#im2), 
-
-<a name="im1"></a>
-
-[aquí](#im1)
-
-
-
+Realicé todas las actividades menos la parte de creatividad de la actividad 4, a parte de eso que me faltó pude realizar las actividades y mostrar evidencias de las mismas, por ejemplo, en la actividad 1 viendo como se comunicaban las [paginas con el servidor](#im1) o la funcionalidad de las [dos esferas entre las dos páginas](#im2), también en la elaboración de las actividades 2, 3 y 4, y finalmente con el apply (actividad 5) que a partir de el [boceto](#im3) pude generar mi propia [aplicación interactiva en tiempo real](#im4)
 
 
 
