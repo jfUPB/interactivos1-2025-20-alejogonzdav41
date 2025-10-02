@@ -145,9 +145,16 @@ Inicia el servidor y abre page1 y page2.
 
 Mueve la ventana de page1. Observa la terminal del servidor. ¿Qué evento se registra (win1update o win2update)? ¿Qué datos (Data:) ves?
 
+- Received win1update from ID: g3EeSZAQZU7r_VW6AAAB Data: { x: 58, y: 220, width: 989, height: 944 }
+
 Mueve la ventana de page2. Observa la terminal. ¿Qué evento se registra ahora? ¿Qué datos ves?
 
+- Received win2update from ID: nfY8TvsM8xpIeQIkAAAD Data: { x: 439, y: 320, width: 989, height: 944 }
+
 Experimento clave: cambia socket.broadcast.emit(‘getdata’, page1); por socket.emit(‘getdata’, page1); (quitando broadcast). Reinicia el servidor, abre ambas páginas. Mueve page1. ¿Se actualiza la visualización en page2? ¿Por qué sí o por qué no? (Pista: ¿A quién le envía el mensaje socket.emit?). Restaura el código a broadcast.emit.
+
+- Si mueves la página 1, se desconecta del todo, como si se perdiera de la otra. Pero si mueves la página 2, la conexión medio que regresa, aunque no queda perfecta. Es como si se viera la otra ventana, pero los datos no se mandan bien. Lo que pasa con los mensajes es que el socket.emit se manda el mensaje a sí mismo.
+Por alguna razón, el código ahora se confunde y cuando mueves la página 1, se pierde la señal, y la única forma de que se "reconecte" es moviendo la página 2. Hay que revisar la lógica de la sincronización en el server.js para arreglarlo.
 
 🧐🧪✍️ Experimenta
 
@@ -845,6 +852,7 @@ server.listen(port, () => {
 ```
 
 ### Autoevaluación
+
 
 
 
