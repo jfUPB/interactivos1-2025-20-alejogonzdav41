@@ -76,6 +76,8 @@ Estaba haciendo el trabajo con compañera Andre y me salió éste error.
 
 **Realiza un diagrama donde muestres el flujo completo de datos y eventos entre los tres componentes: móvil, servidor y escritorio. Puedes ilustrar con un ejemplo de coordenadas táctiles (x, y) y cómo viajan a través del sistema.**
 
+<img width="803" height="922" alt="image" src="https://github.com/user-attachments/assets/0865e20c-b04a-4d2a-bf37-cfdfd9b3adf6" />
+
 
 
 
