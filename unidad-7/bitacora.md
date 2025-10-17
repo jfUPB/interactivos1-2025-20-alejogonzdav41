@@ -48,15 +48,30 @@ Estaba haciendo el trabajo con compañera Andre y me salió éste error.
 
 <img width="1290" height="2796" alt="image" src="https://github.com/user-attachments/assets/4ae29617-2d9a-4955-8f9d-59a2ea0ae76b" />
 
-***Actividad 4***
+***Actividad 3***
 
 **¿Cuál es la función principal de express.static(‘public’) en este servidor? ¿Cómo se compara con el uso de app.get(‘/ruta’, …) del servidor de la Unidad 6?**
 
+* express.static('public') permite que el servidor muestre de forma automática los archivos ubicados en la carpeta public. En la unidad 6 era necesario escribir manualmente cada ruta de las vistas para poder acceder a ellas.
+
 **Explica detalladamente el flujo de un mensaje táctil: ¿Qué evento lo envía desde el móvil? ¿Qué evento lo recibe el servidor? ¿Qué hace el servidor con él? ¿Qué evento lo envía el servidor al escritorio? ¿Por qué se usa socket.broadcast.emit en lugar de io.emit o socket.emit en este caso?**
+
+- Cuando deslizo el dedo en la pantalla del celular, la función touchMoved() detecta el movimiento y envía los datos al servidor mediante socket.emit('message', touchData).
+
+- El servidor recibe esa información con socket.on('message', ...) y la reenvía a los demás clientes usando socket.broadcast.emit('message', message).
+
+- En el celular, el mensaje solo se muestra en la consola, mientras que en el computador el círculo se mueve según las coordenadas recibidas.
+
+- Se utiliza broadcast.emit porque envía el mensaje a todos los clientes excepto al que lo originó; io.emit lo enviaría a todos y socket.emit únicamente al emisor.
 
 **Si conectaras dos computadores de escritorio y un móvil a este servidor, y movieras el dedo en el móvil, ¿Quién recibiría el mensaje retransmitido por el servidor? ¿Por qué?**
 
+* Si tengo dos computadores con el programa de escritorio y un celular, al mover el dedo en el celular, ambos computadores reciben el mensaje, ya que el servidor lo envía a todos los clientes conectados excepto al que lo originó.
+
 **¿Qué información útil te proporcionan los mensajes console.log en el servidor durante la ejecución?**
+
+* Muestra cuándo un cliente se conecta, la posición del toque que se detecta y también cuándo alguien se desconecta. Toda esa información sirve para identificar en qué parte del código podría estar ocurriendo un fallo.
+
 
 
 
