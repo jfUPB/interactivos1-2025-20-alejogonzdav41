@@ -72,6 +72,11 @@ Estaba haciendo el trabajo con compañera Andre y me salió éste error.
 
 * Muestra cuándo un cliente se conecta, la posición del toque que se detecta y también cuándo alguien se desconecta. Toda esa información sirve para identificar en qué parte del código podría estar ocurriendo un fallo.
 
+***Actividad 4***
+
+**Realiza un diagrama donde muestres el flujo completo de datos y eventos entre los tres componentes: móvil, servidor y escritorio. Puedes ilustrar con un ejemplo de coordenadas táctiles (x, y) y cómo viajan a través del sistema.**
+
+
 
 
 
