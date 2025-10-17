@@ -80,5 +80,294 @@ Estaba haciendo el trabajo con compañera Andre y me salió éste error.
 
 
 
+***Apply/Actividad 5***
+ 
+A pesar de que mi codigo no funcionó por algunas dificultades, igual traté de que estuviera bueno hasta donde pude
+ 
+**Desktop**
+
+*index.html*
+
+```js
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>💃 Bailarín Interactivo</title>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.0/lib/p5.min.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="sketch.js"></script>
+<style>
+
+  body {
+
+    margin: 0;
+
+    overflow: hidden;
+
+    background-color: #000;
+
+    font-family: "Segoe UI", sans-serif;
+
+  }
+ 
+  button {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: #ff0077;
+
+    color: white;
+
+    border: none;
+
+    padding: 15px 25px;
+
+    font-size: 20px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+  }
+ 
+  button:hover {
+
+    background: #e6006f;
+
+  }
+</style>
+</head>
+<body></body>
+</html>
+ 
+```
+ 
+*sketch.js*
+
+```js
+
+let socket;
+
+let bailarin;
+
+let velocidad = 1;
+
+let started = false;
+ 
+function preload() {
+
+  bailarin = loadImage("bailarin.gif"); // tu GIF animado
+
+}
+ 
+function setup() {
+
+  createCanvas(windowWidth, windowHeight);
+
+  socket = io();
+ 
+  let startBtn = createButton("💃 Iniciar experiencia");
+
+  startBtn.position(width / 2 - 100, height / 2);
+
+  startBtn.style("font-size", "20px");
+
+  startBtn.style("padding", "15px");
+
+  startBtn.style("border-radius", "10px");
+
+  startBtn.mousePressed(() => {
+
+    started = true;
+
+    startBtn.remove();
+
+  });
+ 
+  // Cuando el celular toca la pantalla
+
+  socket.on("subirVelocidad", () => {
+
+    velocidad = min(velocidad + 0.5, 5); // límite máx
+
+  });
+ 
+  // Cuando suelta
+
+  socket.on("bajarVelocidad", () => {
+
+    velocidad = 1;
+
+  });
+
+}
+ 
+function draw() {
+
+  background(0);
+ 
+  if (!started) {
+
+    fill(255);
+
+    textAlign(CENTER, CENTER);
+
+    textSize(24);
+
+    text("Presiona para empezar 💃", width / 2, height / 2 + 80);
+
+    return;
+
+  }
+ 
+  // Dibuja el GIF con efecto de "velocidad"
+
+  push();
+
+  translate(width / 2, height / 2);
+
+  let s = 400 + sin(frameCount * 0.1 * velocidad) * 20;
+
+  imageMode(CENTER);
+
+  image(bailarin, 0, 0, s, s);
+
+  pop();
+ 
+  fill(255);
+
+  textSize(20);
+
+  textAlign(CENTER);
+
+  text("Velocidad del baile: " + velocidad.toFixed(1) + "x", width / 2, height - 50);
+
+}
+
+```
+ 
+**Mobile**
+
+*index.html*
+
+```js
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>💃 Control de Baile - Móvil</title>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.0/lib/p5.min.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="mobile.js"></script>
+<style>
+
+  body {
+
+    margin: 0;
+
+    overflow: hidden;
+
+    background-color: #000;
+
+    font-family: "Segoe UI", sans-serif;
+
+    color: white;
+
+  }
+ 
+  h2 {
+
+    text-align: center;
+
+    margin-top: 40%;
+
+  }
+</style>
+</head>
+<body>
+<h2>💃 Toca la pantalla para hacerlo bailar más rápido 💨</h2>
+</body>
+</html>
+
+```
+ 
+*sketch.js*
+
+```js
+
+let socket;
+ 
+function setup() {
+
+  createCanvas(windowWidth, windowHeight);
+
+  socket = io();
+
+}
+ 
+function draw() {
+
+  background(0);
+
+  fill(255);
+
+  textAlign(CENTER, CENTER);
+
+  textSize(24);
+
+  text("💃 Toca para hacerlo bailar rápido", width / 2, height / 2);
+
+}
+ 
+// Cuando se toca la pantalla
+
+function touchStarted() {
+
+  socket.emit("subirVelocidad");
+
+  return false;
+
+}
+ 
+// Cuando se suelta la pantalla
+
+function touchEnded() {
+
+  socket.emit("bajarVelocidad");
+
+  return false;
+
+}
+
+```
+ 
+## Autoevaluación
+ 
+| **Criterio**                                   | **Autoevaluación personal**                                                                                                                                              | **Nivel**             |
+
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- |
+
+| **1. Profundidad de la indagación**            | Entendí bien por qué usamos Dev Tunnels y cómo funciona el envío de mensajes entre los clientes. No solo seguí los pasos, también quise entender el porqué de cada cosa. | **5.0** |
+
+| **2. Calidad de la experimentación**           | Hice varias pruebas entre el celular y el computador, revisé los mensajes del servidor y después creé mi propia app que tristemente no funcionó.   | **3.0** |
+
+| **3. Análisis y reflexión**                    | Expliqué con mis palabras qué pasaba en cada prueba y por qué. Analicé los resultados y comparé Dev Tunnels con la IP local para entender sus ventajas.                  | **3.0** |
+
+| **4. Apropiación y articulación de conceptos** | Entendí cómo todo se conecta entre móvil, servidor y escritorio. Pero no funcionó correctamente el codigo       | **3.0** |
+ 
+A pesar de que hice todo y siento que comprendí correctamente, no pude realizar adecuadamente el apply por lo que siento que todavía me falta.
+ 
+Nota final: 3.5
+ 
+ 
 
 
