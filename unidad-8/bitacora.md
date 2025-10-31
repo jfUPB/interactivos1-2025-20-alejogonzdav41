@@ -157,3 +157,5 @@ function touchEnded() {
   socket.emit("boton", "idle");
 }
 ```
+
+Me pondría 3.5, porque aunque el código no funcionó del todo bien, realicé toda la actividad y presenté el proyecto completo. Hice los bocetos, el diagrama y el código del celular y del computador. Faltó ajustar algunos detalles técnicos, pero logré mostrar la idea principal.
